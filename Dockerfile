@@ -12,5 +12,6 @@ COPY app/app.py .
 
 COPY tests/ app/tests/
 
-CMD [ "python", "app.py" ]
+EXPOSE 5000  # Expose port 5000 for Flask app
 
+CMD [ "python", "app.py" ]
