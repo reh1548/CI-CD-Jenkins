@@ -22,13 +22,10 @@ pipeline {
       }
     }
   }
-  post {
+post {
     success {
-      // Run the shell script to start the Docker container after successful deployment
-      sh 'sh run_container.sh'
+        sh 'sh run_container.sh'
+        sh 'docker logout'
     }
-    always {
-      sh 'docker logout'
-    }
-  }
+}
 }
