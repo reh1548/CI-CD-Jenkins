@@ -1,6 +1,13 @@
 pipeline {
   agent any
 
+  environment {
+    DOCKER_IMAGE_NAME = 'my-flask-app'
+    DOCKER_CONTAINER_NAME = 'my-flask-container'
+    CONTAINER_PORT = 5000
+    HOST_PORT = 5000
+  }
+
   stages {
     stage('Build') {
       steps {
@@ -18,13 +25,14 @@ pipeline {
         withCredentials([usernamePassword(credentialsId: "${DOCKER_REGISTRY_CREDS}", passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
           sh "echo \$DOCKER_PASSWORD | docker login -u \$DOCKER_USERNAME --password-stdin docker.io"
           sh 'docker push $DOCKER_BFLASK_IMAGE'
+          sh 'sh run_container.sh'
         }
       }
     }
   }
 post {
-    success {
-        sh 'sh run_container.sh'
+    always {
+        // Logout from Docker registry
         sh 'docker logout'
     }
 }
