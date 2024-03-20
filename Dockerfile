@@ -12,6 +12,4 @@ COPY app/app.py .
 
 COPY tests/ app/tests/
 
-EXPOSE 5000 
-
 CMD [ "python", "app.py" ]

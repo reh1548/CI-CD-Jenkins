@@ -1,39 +1,39 @@
 pipeline {
-  agent any
+    agent any
 
-  environment {
-    DOCKER_IMAGE_NAME = 'my-flask-app'
-    DOCKER_CONTAINER_NAME = 'my-flask-container'
-    CONTAINER_PORT = 5000
-    HOST_PORT = 5000
-  }
+    environment {
+        DOCKER_IMAGE_NAME = 'my-flask-app'
+        DOCKER_CONTAINER_NAME = 'my-flask-container'
+        CONTAINER_PORT = 5000
+        HOST_PORT = 80
+    }
 
-  stages {
-    stage('Build') {
-      steps {
-        sh 'docker build -t my-flask-app .'
-        sh 'docker tag my-flask-app $DOCKER_BFLASK_IMAGE'
-      }
-    }
-    stage('Test') {
-      steps {
-        sh 'docker run my-flask-app python -m pytest app/tests/'
-      }
-    }
-    stage('Deploy') {
-      steps {
-        withCredentials([usernamePassword(credentialsId: "${DOCKER_REGISTRY_CREDS}", passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
-          sh "echo \$DOCKER_PASSWORD | docker login -u \$DOCKER_USERNAME --password-stdin docker.io"
-          sh 'docker push $DOCKER_BFLASK_IMAGE'
-          sh 'sh run_container.sh'
+    stages {
+        stage('Build') {
+            steps {
+                sh 'docker build -t my-flask-app .'
+                sh 'docker tag my-flask-app $DOCKER_IMAGE_NAME'
+            }
         }
-      }
-    }
-  }
-post {
-    always {
-        // Logout from Docker registry
-        sh 'docker logout'
+        stage('Test') {
+            steps {
+                sh 'docker run my-flask-app python -m pytest app/tests/'
+            }
+        }
+stage('Deploy') {
+    steps {
+        withCredentials([usernamePassword(credentialsId: "${DOCKER_REGISTRY_CREDS}", passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
+            sh "echo \$DOCKER_PASSWORD | docker login -u \$DOCKER_USERNAME --password-stdin docker.io"
+            sh 'docker push $DOCKER_BFLASK_IMAGE'
+            sh "docker run -d -p 5000:5000 $DOCKER_BFLASK_IMAGE"
+        }
     }
 }
+    }
+    post {
+        always {
+            // Logout from Docker registry
+            sh 'docker logout'
+        }
+    }
 }
