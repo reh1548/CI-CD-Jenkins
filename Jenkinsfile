@@ -35,6 +35,7 @@ pipeline {
           // sh 'docker rm $(docker ps -aq --filter "status=exited" --filter "expose=5000") || true'
 
           // Run the container with desired port mapping
+          HOST_PORT = $(shuf -i 8000-9000 -n 1)
           sh "docker run -d -p ${HOST_PORT}:${CONTAINER_PORT} $DOCKER_IMAGE_NAME"
         }
       }
