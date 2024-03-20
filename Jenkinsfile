@@ -25,7 +25,9 @@ stage('Deploy') {
         withCredentials([usernamePassword(credentialsId: "${DOCKER_REGISTRY_CREDS}", passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
             sh "echo \$DOCKER_PASSWORD | docker login -u \$DOCKER_USERNAME --password-stdin docker.io"
             sh 'docker push $DOCKER_BFLASK_IMAGE'
-            sh "docker run -d -p 5000:5000 $DOCKER_BFLASK_IMAGE"
+            sh "docker stop $DOCKER_CONTAINER_NAME || true" // Stop the existing container if it's running
+            sh "docker rm $DOCKER_CONTAINER_NAME || true"   // Remove the existing container if it exists
+            sh "docker run -d -p 5000:5000 $DOCKER_IMAGE_NAME"
         }
     }
 }
