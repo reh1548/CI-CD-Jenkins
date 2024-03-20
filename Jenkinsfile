@@ -26,7 +26,7 @@ pipeline {
       steps {
         withCredentials([usernamePassword(credentialsId: "${DOCKER_REGISTRY_CREDS}", passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
           sh "echo \$DOCKER_PASSWORD | docker login -u \$DOCKER_USERNAME --password-stdin docker.io"
-          sh 'docker push $DOCKER_IMAGE_NAME'
+          sh 'docker push $DOCKER_BFLASK_IMAGE'
 
           // Stop any container using port 5000 before deployment
           sh 'docker stop $(docker ps -q --filter "expose=5000") || true'  // Graceful stop with error handling
