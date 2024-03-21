@@ -9,6 +9,7 @@ Thanks to: @mudasirhaji for his repo and detailed guide.
 ## Changes Made
 - Made it possible to view the webpage
 - Fixed Flask and Werkzeug dependency bug
+- Fixed build fail due to `COPY app/ .` file path and changed it to `COPY app/app.py .`
 
 ## Project Structure
 
