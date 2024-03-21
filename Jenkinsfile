@@ -5,9 +5,7 @@ pipeline {
     DOCKER_IMAGE_NAME = 'my-flask-app'
     DOCKER_CONTAINER_NAME = 'my-flask-container'
     CONTAINER_PORT = 5000
-    // Use a random high port for host to avoid conflicts (optional)
-    // HOST_PORT = $(shuf -i 8000-9000 -n 1)
-    HOST_PORT = 8080  // Change to desired host port if not using random
+    HOST_PORT = 80  // Change to desired host port if not using random
   }
 
   stages {
@@ -31,7 +29,7 @@ pipeline {
           // Stop any container using port 5000 before deployment
           sh 'docker stop $(docker ps -q --filter "expose=5000") || true'  // Graceful stop with error handling
 
-          // Stop Apache HTTP Server
+          // Stop Apache HTTP Server running on port 80
           sh 'sudo service apache2 stop || true'
 
           // Run the container with desired port mapping
