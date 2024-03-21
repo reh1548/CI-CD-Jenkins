@@ -31,8 +31,8 @@ pipeline {
           // Stop any container using port 5000 before deployment
           sh 'docker stop $(docker ps -q --filter "expose=5000") || true'  // Graceful stop with error handling
 
-          // Remove the stopped container (optional)
-          // sh 'docker rm $(docker ps -aq --filter "status=exited" --filter "expose=5000") || true'
+          // Stop Apache HTTP Server
+          sh 'sudo service apache2 stop || true'
 
           // Run the container with desired port mapping
           sh "docker run -d -p ${HOST_PORT}:${CONTAINER_PORT} $DOCKER_IMAGE_NAME"
