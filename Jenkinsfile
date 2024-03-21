@@ -6,8 +6,8 @@ pipeline {
     DOCKER_CONTAINER_NAME = 'my-flask-container'
     CONTAINER_PORT = 5000
     // Use a random high port for host to avoid conflicts (optional)
-    HOST_PORT = $(shuf -i 8000-9000 -n 1)
-    // HOST_PORT = 80  // Change to desired host port if not using random
+    // HOST_PORT = $(shuf -i 8000-9000 -n 1)
+    HOST_PORT = 80  // Change to desired host port if not using random
   }
 
   stages {
