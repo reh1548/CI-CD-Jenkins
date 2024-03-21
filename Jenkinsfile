@@ -26,6 +26,7 @@ pipeline {
           sh "echo \$DOCKER_PASSWORD | docker login -u \$DOCKER_USERNAME --password-stdin docker.io"
           sh 'docker push $DOCKER_BFLASK_IMAGE'
           sh 'docker stop $DOCKER_CONTAINER_NAME || true'
+          sh "docker rm -f \$DOCKER_CONTAINER_NAME || true"
           sh 'docker run -d -p ${HOST_PORT}:${CONTAINER_PORT} --name $DOCKER_CONTAINER_NAME $DOCKER_IMAGE_NAME'
         }
       }
